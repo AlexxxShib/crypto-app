@@ -1,11 +1,18 @@
 package com.example.cryptoapp.pojo
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import io.reactivex.rxjava3.annotations.NonNull
 
+@Entity(tableName = "full_price_list")
 data class CoinPriceInfo (
     @SerializedName("TYPE"                    ) var type                    : String? = null,
     @SerializedName("MARKET"                  ) var market                  : String? = null,
-    @SerializedName("FROMSYMBOL"              ) var fromsymbol              : String? = null,
+
+    @PrimaryKey
+    @SerializedName("FROMSYMBOL"              ) var fromSymbol              : String = "",
+
     @SerializedName("TOSYMBOL"                ) var tosymbol                : String? = null,
     @SerializedName("FLAGS"                   ) var flags                   : String? = null,
     @SerializedName("LASTMARKET"              ) var lastMarket              : String? = null,
