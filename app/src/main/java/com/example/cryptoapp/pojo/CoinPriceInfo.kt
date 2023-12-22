@@ -2,6 +2,8 @@ package com.example.cryptoapp.pojo
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.example.cryptoapp.api.ApiFactory
+import com.example.cryptoapp.utils.convertTimestampToTime
 import com.google.gson.annotations.SerializedName
 import io.reactivex.rxjava3.annotations.NonNull
 
@@ -13,7 +15,7 @@ data class CoinPriceInfo (
     @PrimaryKey
     @SerializedName("FROMSYMBOL"              ) var fromSymbol              : String = "",
 
-    @SerializedName("TOSYMBOL"                ) var tosymbol                : String? = null,
+    @SerializedName("TOSYMBOL"                ) var toSymbol                : String? = null,
     @SerializedName("FLAGS"                   ) var flags                   : String? = null,
     @SerializedName("LASTMARKET"              ) var lastMarket              : String? = null,
     @SerializedName("MEDIAN"                  ) var median                  : Double? = null,
@@ -21,7 +23,7 @@ data class CoinPriceInfo (
     @SerializedName("TOPTIERVOLUME24HOURTO"   ) var topTierVolume24HourTo   : Double? = null,
     @SerializedName("LASTTRADEID"             ) var lastTradeid             : String? = null,
     @SerializedName("PRICE"                   ) var price                   : Double? = null,
-    @SerializedName("LASTUPDATE"              ) var lastUpdate              : Int?    = null,
+    @SerializedName("LASTUPDATE"              ) var lastUpdate              : Long?   = null,
     @SerializedName("LASTVOLUME"              ) var lastVolume              : Double? = null,
     @SerializedName("LASTVOLUMETO"            ) var lastVolumeTo            : Double? = null,
     @SerializedName("VOLUMEHOUR"              ) var volumeHour              : Double? = null,
@@ -58,4 +60,12 @@ data class CoinPriceInfo (
     @SerializedName("TOTALTOPTIERVOLUME24H"   ) var totalTopTierVolume24H   : Double? = null,
     @SerializedName("TOTALTOPTIERVOLUME24HTO" ) var totalTopTierVolume24HTo : Double? = null,
     @SerializedName("IMAGEURL"                ) var imageUrl                : String? = null
-)
+) {
+    fun getFormattedLastUpdateTime(): String {
+        return convertTimestampToTime(lastUpdate)
+    }
+
+    fun getFullImageUrl(): String {
+        return ApiFactory.BASE_IAMGE_URL + imageUrl
+    }
+}
