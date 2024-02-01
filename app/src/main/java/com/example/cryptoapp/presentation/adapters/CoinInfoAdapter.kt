@@ -1,4 +1,4 @@
-package com.example.cryptoapp.adapters
+package com.example.cryptoapp.presentation.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -6,15 +6,13 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import com.example.cryptoapp.R
+import com.example.cryptoapp.data.network.ApiFactory
 import com.example.cryptoapp.databinding.ItemCoinInfoBinding
-import com.example.cryptoapp.pojo.CoinPriceInfo
+import com.example.cryptoapp.domain.CoinInfo
+import com.example.cryptoapp.utils.convertTimestampToTime
 import com.squareup.picasso.Picasso
 
 class CoinInfoAdapter(private val context: Context): Adapter<CoinInfoAdapter.CoinInfoViewHolder>() {
-
-    interface OnCoinClickLister {
-        fun onCoinClick(coinPriceInfo: CoinPriceInfo)
-    }
 
     inner class CoinInfoViewHolder(binding: ItemCoinInfoBinding): RecyclerView.ViewHolder(binding.root) {
         val imLogoCoin = binding.imLogoCoin
@@ -23,13 +21,13 @@ class CoinInfoAdapter(private val context: Context): Adapter<CoinInfoAdapter.Coi
         val tvLastUpdate = binding.tvLastUpdate
     }
 
-    var coinInfoList = listOf<CoinPriceInfo>()
+    var coinInfoList = listOf<CoinInfo>()
         set(value) {
             field = value
             notifyDataSetChanged()
         }
 
-    var onCoinClickLister: (CoinPriceInfo) -> Unit = {}
+    var onCoinClickLister: (CoinInfo) -> Unit = {}
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CoinInfoViewHolder {
         val binding = ItemCoinInfoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -44,8 +42,12 @@ class CoinInfoAdapter(private val context: Context): Adapter<CoinInfoAdapter.Coi
 //            tvSymbols.text = "${coin.fromSymbol} / ${coin.toSymbol}"
             tvSymbols.text = context.getString(R.string.symbols_template, coin.fromSymbol, coin.toSymbol)
             tvPrice.text = "%.4f".format(coin.price)
-            tvLastUpdate.text = context.getString(R.string.last_update_template, coin.getFormattedLastUpdateTime())
-            Picasso.get().load(coin.getFullImageUrl()).into(imLogoCoin)
+            tvLastUpdate.text = context.getString(R.string.last_update_template, convertTimestampToTime(coin.lastUpdate))
+
+            Picasso.get()
+                .load(ApiFactory.BASE_IMAGE_URL + coin.imageUrl)
+                .into(imLogoCoin)
+
             itemView.setOnClickListener {
                 onCoinClickLister(coin)
             }

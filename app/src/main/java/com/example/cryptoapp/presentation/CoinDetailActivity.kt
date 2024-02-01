@@ -1,22 +1,12 @@
-package com.example.cryptoapp
+package com.example.cryptoapp.presentation
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
+import com.example.cryptoapp.data.network.ApiFactory
 import com.example.cryptoapp.databinding.ActivityCoinDetailBinding
-import com.example.cryptoapp.databinding.ActivityCoinPriceListBinding
-import com.example.cryptoapp.ui.theme.CryptoAppTheme
 import com.squareup.picasso.Picasso
 
 class CoinDetailActivity : ComponentActivity() {
@@ -40,21 +30,23 @@ class CoinDetailActivity : ComponentActivity() {
         binding = ActivityCoinDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val fromSymbol = intent.getStringExtra(EXTRA_FROM_SYMBOL)
-        if (fromSymbol == null) {
+        if (!intent.hasExtra(EXTRA_FROM_SYMBOL)) {
             finish()
             return
         }
 
+        val fromSymbol = intent.getStringExtra(EXTRA_FROM_SYMBOL) ?: ""
+
         viewModel = ViewModelProvider(this)[CoinViewModel::class.java]
         viewModel.getDetailInfo(fromSymbol).observe(this) {
-            Log.d("DETAIL_INFO", it.toString())
-
             with(binding) {
                 tvFromSymbol.text = it.fromSymbol
                 tvToSymbol.text = it.toSymbol
                 tvPrice.text = it.price.toString()
-                Picasso.get().load(it.getFullImageUrl()).into(imLogoCoin)
+
+                Picasso.get()
+                    .load(ApiFactory.BASE_IMAGE_URL + it.imageUrl)
+                    .into(imLogoCoin)
             }
         }
     }
