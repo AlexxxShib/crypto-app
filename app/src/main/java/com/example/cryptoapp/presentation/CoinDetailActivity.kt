@@ -3,12 +3,31 @@ package com.example.cryptoapp.presentation
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.FragmentActivity
+import com.example.cryptoapp.R
 import com.example.cryptoapp.databinding.ActivityCoinDetailBinding
-import com.squareup.picasso.Picasso
 
-class CoinDetailActivity : ComponentActivity() {
+class CoinDetailActivity : FragmentActivity() {
+
+    private val binding by lazy {
+        ActivityCoinDetailBinding.inflate(layoutInflater)
+    }
+
+    private val fromSymbol: String
+        get() = intent.getStringExtra(EXTRA_FROM_SYMBOL)
+            ?: throw RuntimeException("fromSymbol == null")
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(binding.root)
+
+        if (savedInstanceState == null) {
+            supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.fragment_container_view, CoinDetailFragment.newInstance(fromSymbol))
+                .commit()
+        }
+    }
 
     companion object {
         private const val EXTRA_FROM_SYMBOL = "EXTRA_FROM_SYMBOL"
@@ -17,38 +36,6 @@ class CoinDetailActivity : ComponentActivity() {
             val intent = Intent(context, CoinDetailActivity::class.java)
             intent.putExtra(EXTRA_FROM_SYMBOL, fromSymbol)
             return intent
-        }
-    }
-
-    private lateinit var viewModel: CoinViewModel
-
-    private val binding by lazy {
-        ActivityCoinDetailBinding.inflate(layoutInflater)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setContentView(binding.root)
-
-        if (!intent.hasExtra(EXTRA_FROM_SYMBOL)) {
-            finish()
-            return
-        }
-
-        val fromSymbol = intent.getStringExtra(EXTRA_FROM_SYMBOL) ?: ""
-
-        viewModel = ViewModelProvider(this)[CoinViewModel::class.java]
-        viewModel.getDetailInfo(fromSymbol).observe(this) {
-            with(binding) {
-                tvFromSymbol.text = it.fromSymbol
-                tvToSymbol.text = it.toSymbol
-                tvPrice.text = it.price.toString()
-
-                Picasso.get()
-                    .load(it.imageUrl)
-                    .into(imLogoCoin)
-            }
         }
     }
 }
