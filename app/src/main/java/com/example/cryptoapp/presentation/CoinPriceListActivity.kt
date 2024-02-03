@@ -8,17 +8,20 @@ import com.example.cryptoapp.databinding.ActivityCoinPriceListBinding
 
 class CoinPriceListActivity : ComponentActivity() {
 
-    private lateinit var binding: ActivityCoinPriceListBinding
     private lateinit var viewModel: CoinViewModel
+
+    private val binding by lazy {
+        ActivityCoinPriceListBinding.inflate(layoutInflater)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityCoinPriceListBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         val adapter = CoinInfoAdapter(this)
         binding.rvCoinPriceList.adapter = adapter
+        binding.rvCoinPriceList.itemAnimator = null
 
         adapter.onCoinClickLister = {
             startActivity(CoinDetailActivity.newIntent(this, it.fromSymbol))
@@ -26,7 +29,7 @@ class CoinPriceListActivity : ComponentActivity() {
 
         viewModel = ViewModelProvider(this)[CoinViewModel::class.java]
         viewModel.coinInfoList.observe(this) {
-            adapter.coinInfoList = it
+            adapter.submitList(it)
         }
     }
 }
