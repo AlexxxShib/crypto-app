@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.ViewModelProvider
-import com.example.cryptoapp.data.network.ApiFactory
 import com.example.cryptoapp.databinding.ActivityCoinDetailBinding
 import com.squareup.picasso.Picasso
 
@@ -45,7 +44,7 @@ class CoinDetailActivity : ComponentActivity() {
                 tvPrice.text = it.price.toString()
 
                 Picasso.get()
-                    .load(ApiFactory.BASE_IMAGE_URL + it.imageUrl)
+                    .load(it.imageUrl)
                     .into(imLogoCoin)
             }
         }
