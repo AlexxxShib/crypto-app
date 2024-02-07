@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
+    id("kotlin-kapt")
 }
 
 android {
@@ -88,6 +89,12 @@ dependencies {
     implementation("androidx.work:work-runtime-ktx:2.9.0")
 
     implementation("androidx.fragment:fragment-ktx:1.6.2")
+
+    val dagger_version = "2.48.1"
+    implementation("com.google.dagger:dagger:$dagger_version")
+    kapt("com.google.dagger:dagger-compiler:$dagger_version")
+    implementation("com.google.dagger:dagger-android:$dagger_version")
+    kapt("com.google.dagger:dagger-android-processor:$dagger_version")
 
     ///////////////////
 
