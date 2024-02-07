@@ -12,6 +12,6 @@ interface ViewModelModule {
     @IntoMap
     @ViewModelKey(CoinViewModel::class)
     @Binds
-    fun bindExampleViewModel(impl: CoinViewModel) : ViewModel
+    fun bindViewModel(impl: CoinViewModel) : ViewModel
 
 }
