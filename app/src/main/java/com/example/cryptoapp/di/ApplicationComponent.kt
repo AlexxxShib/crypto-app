@@ -3,7 +3,6 @@ package com.example.cryptoapp.di
 import android.app.Application
 import com.example.cryptoapp.presentation.CoinDetailFragment
 import com.example.cryptoapp.presentation.CoinPriceListActivity
-import com.example.dependencyinjectionstart.example2.di.DataModule
 import dagger.BindsInstance
 import dagger.Component
 
