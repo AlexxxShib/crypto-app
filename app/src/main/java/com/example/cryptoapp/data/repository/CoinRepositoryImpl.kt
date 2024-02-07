@@ -10,8 +10,9 @@ import com.example.cryptoapp.data.mapper.CoinMapper
 import com.example.cryptoapp.data.worker.RefreshDataWorker
 import com.example.cryptoapp.domain.CoinInfo
 import com.example.cryptoapp.domain.CoinRepository
+import javax.inject.Inject
 
-class CoinRepositoryImpl(
+class CoinRepositoryImpl @Inject constructor(
     private val application: Application
 ) : CoinRepository {
 

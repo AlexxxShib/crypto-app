@@ -1,17 +1,30 @@
 package com.example.cryptoapp.presentation
 
+import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.cryptoapp.CryptoApp
 import com.example.cryptoapp.databinding.FragmentCoinDetailBinding
 import com.squareup.picasso.Picasso
+import javax.inject.Inject
 
 class CoinDetailFragment : Fragment() {
 
-    private lateinit var viewModel: CoinViewModel
+    private val component by lazy {
+        (requireActivity().application as CryptoApp).component
+    }
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    private val viewModel by lazy {
+        ViewModelProvider(this, viewModelFactory)[CoinViewModel::class.java]
+    }
 
     private var _binding: FragmentCoinDetailBinding? = null
     private val binding: FragmentCoinDetailBinding
@@ -20,6 +33,11 @@ class CoinDetailFragment : Fragment() {
     private val fromSymbol: String
         get() = requireArguments().getString(EXTRA_FROM_SYMBOL)
             ?: throw RuntimeException("fromSymbol == null")
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        component.inject(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -33,7 +51,8 @@ class CoinDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(this)[CoinViewModel::class.java]
+        Log.d("CoinDetailFragment", "Fragment ViewModel $viewModel")
+
         viewModel.getDetailInfo(fromSymbol).observe(viewLifecycleOwner) {
             with(binding) {
                 tvFromSymbol.text = it.fromSymbol
